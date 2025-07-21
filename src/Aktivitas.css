@@ -1,0 +1,363 @@
+.aktivitas-container {
+  background: linear-gradient(135deg, #ff7b00 0%, #ff9500 100%);
+  min-height: 100vh;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+}
+
+.aktivitas-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.back-button-aktivitas {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 24px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.aktivitas-title h1 {
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+  text-align: center;
+}
+
+.kai-rooms-logo {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: white;
+}
+
+.logo-icon {
+  width: 60px;
+  height: auto;
+  margin-right: 0; 
+  flex-wrap: nowrap;
+}
+
+.logo-text {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.aktivitas-content {
+  display: flex;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.calendar-section {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  flex: 2;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.calendar-header h2 {
+  margin: 0;
+  font-size: 22px;
+  color: #333;
+  font-weight: 600;
+}
+
+.nav-button {
+  background: #ff7b00;
+  border: none;
+  color: white;
+  font-size: 20px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.nav-button:hover {
+  background: #e06900;
+}
+
+.calendar-grid {
+  width: 100%;
+}
+
+.day-headers {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.day-header {
+  text-align: center;
+  font-weight: 600;
+  color: #666;
+  padding: 12px 0;
+  font-size: 14px;
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  background-color: transparent;
+}
+
+.calendar-day {
+  background: #f8f9fa;
+  padding: 15px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 16px;
+  min-height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  position: relative;
+  border-radius: 8px;
+  border: 2px solid transparent;
+}
+
+.calendar-day.valid-day:hover {
+  background: #e9ecef;
+}
+
+.calendar-day.selected {
+  background: #ff7b00 !important;
+  color: white;
+  font-weight: bold;
+  border: 2px solid #e06900;
+}
+
+.calendar-day.has-event {
+  background: #ff7b00;
+  color: white;
+  font-weight: 600;
+}
+
+.calendar-day.has-event:not(.selected) {
+  background: #ff7b00;
+}
+
+.calendar-day.empty-day {
+  background: transparent;
+  cursor: default;
+}
+
+/* Scrollable event section with sticky header */
+.events-section {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  flex: 1;
+  height: 500px;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.events-section h3 {
+  position: sticky;
+  top: 0;
+  background: white;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin: 0 0 20px 0;
+  color: #333;
+  font-size: 20px;
+  font-weight: 600;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.event-item {
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #ff7b00;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.event-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.event-time {
+  font-size: 12px;
+  color: #666;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.event-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 3px;
+}
+
+.event-unit {
+  font-size: 12px;
+  color: #888;
+}
+
+@media (max-width: 768px) {
+  .aktivitas-container {
+    padding: 15px;
+  }
+
+  .aktivitas-content {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .aktivitas-header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .aktivitas-title h1 {
+    font-size: 20px;
+  }
+
+  .calendar-section,
+  .events-section {
+    padding: 20px;
+  }
+
+  .calendar-day {
+    padding: 10px;
+    min-height: 35px;
+    font-size: 14px;
+  }
+}
+/* Tablet landscape & laptop kecil (769px–1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .aktivitas-content {
+    flex-direction: column;
+    gap: 25px;
+  }
+
+  .calendar-section,
+  .events-section {
+    width: 100%;
+    padding: 24px;
+  }
+
+  .calendar-day {
+    font-size: 15px;
+    min-height: 40px;
+  }
+}
+
+/* Laptop sedang–besar (1025px–1439px) */
+@media (min-width: 1025px) and (max-width: 1439px) {
+  .calendar-section,
+  .events-section {
+    padding: 28px;
+  }
+
+  .calendar-day {
+    font-size: 16px;
+    min-height: 48px;
+  }
+}
+
+/* Layar sangat besar (TV/display 1440px+) */
+@media (min-width: 1440px) {
+  .aktivitas-content {
+    max-width: 1400px;
+    gap: 40px;
+  }
+
+  .calendar-section,
+  .events-section {
+    padding: 32px;
+  }
+
+  .calendar-day {
+    font-size: 18px;
+    min-height: 55px;
+  }
+
+  .event-title {
+    font-size: 16px;
+  }
+
+  .event-item {
+    padding: 18px;
+  }
+}
+/* 🧾 Kotak baru yang muncul setelah klik tanggal (riwayat meeting per tanggal) */
+.selected-events-box {
+  position: relative;       /* ✅ penting agar sticky anak-anaknya patuh */
+  background: white;
+  margin: 30px auto 0;
+  padding: 0 20px 20px;     /* ✅ padding atas 0 agar header nempel */
+  max-width: 1200px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  height: 250px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* 📌 Judul tanggal tetap kelihatan saat scroll */
+.selected-events-box h3 {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 20;
+  margin: 0;                /* ✅ hilangkan jarak dari atas */
+  padding: 12px 0;          /* ✅ bikin nyaman tapi mentok atas */
+  border-bottom: 1px solid #eee;
+  font-size: 18px;
+}
+
+
+/* 📋 Daftar rapat yang muncul setelah pilih tanggal */
+.selected-event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.selected-event-list .event-item {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #ff7b00;
+  font-size: 14px;
+}
