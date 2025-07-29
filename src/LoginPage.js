@@ -114,7 +114,7 @@ localStorage.setItem("user", JSON.stringify(finalUser));
         <button className="btn-login" onClick={handleLogin}>Masuk</button>
 
         <button className="btn-google" onClick={() => {
-  window.location.href = "http://localhost:5000/api/auth/google";
+  window.location.href = process.env.REACT_APP_API_URL+"/api/auth/google";
 }}>
   <img src={googleLogo} alt="Google Logo" style={{ width: '20px', marginRight: '10px' }} />
   Sign in with Google
