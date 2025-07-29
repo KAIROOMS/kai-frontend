@@ -361,3 +361,21 @@
   border-left: 4px solid #ff7b00;
   font-size: 14px;
 }
+/* HP kecil (max 480px) */
+@media (max-width: 480px) {
+  .aktivitas-container {
+    padding: 12px;
+    overflow-x: auto;
+  }
+
+  .aktivitas-table {
+    font-size: 12px;
+    min-width: 500px;
+  }
+
+  .aktivitas-table thead th,
+  .aktivitas-table td {
+    padding: 8px;
+  }
+}
+

@@ -11,6 +11,16 @@ import Roomstatus from './Roomstatus';
 import Notifikasi from './notifikasi';
 import HybridMeetingStatus from './HybridMeetingStatus';
 import Pengaturan from './Pengaturan';
+import AuthSuccess from './AuthSuccess';
+import AuthError from './AuthError';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from "./pages/ResetPassword";
+import AdminApproval from './AdminApproval';
+
+
+
+
+
 
 
 function App() {
@@ -25,15 +35,22 @@ function App() {
   }, []);
 
   // Dengarkan perubahan localStorage → update state auth
-  useEffect(() => {
-    const checkAuthChange = () => {
-      const user = localStorage.getItem("user");
-      setIsAuthenticated(!!user);
-    };
+ useEffect(() => {
+  const syncAuthState = () => {
+    const user = localStorage.getItem("user");
+    console.log("📦 user from localStorage:", user);
+    setIsAuthenticated(!!user);
+    console.log("🔄 Auth state updated, isAuthenticated:", !!user);
+  };
 
-    window.addEventListener("storage", checkAuthChange);
-    return () => window.removeEventListener("storage", checkAuthChange);
-  }, []);
+  // ✅ Langsung cek saat mount
+  syncAuthState();
+
+  // ✅ Jaga-jaga kalau pakai event storage juga
+  window.addEventListener("storage", syncAuthState);
+  return () => window.removeEventListener("storage", syncAuthState);
+}, []);
+
 
   if (showSplash) {
     return <SplashScreen />;
@@ -52,6 +69,11 @@ function App() {
         <Route path="/notifikasi" element={isAuthenticated ? <Notifikasi /> : <Navigate to="/login" />} />
         <Route path="/pengaturan" element={isAuthenticated ? <Pengaturan /> : <Navigate to="/login" />} />
         <Route path="/hybrid-meeting-status" element={isAuthenticated ? <HybridMeetingStatus /> : <Navigate to="/login" />} />
+        <Route path="/auth/success" element={<AuthSuccess />} />
+        <Route path="/auth/error" element={<AuthError />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/admin-approval" element={<AdminApproval />} />
       </Routes>
     </Router>
   );

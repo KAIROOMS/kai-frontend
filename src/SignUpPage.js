@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './SignUpPage.css';
 import illustration from './signupkai.png';
+import { useNavigate } from 'react-router-dom';
 
 function SignUpPage() {
   const [formData, setFormData] = useState({
@@ -16,6 +17,9 @@ function SignUpPage() {
   const [loading, setLoading] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [userEmail, setUserEmail] = useState('');
+  const [showTerms, setShowTerms] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     console.log("CHANGE", e.target.name, e.target.value);
@@ -27,68 +31,77 @@ function SignUpPage() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.terms) {
-      alert("Kamu harus menyetujui Syarat & Ketentuan.");
-      return;
+  e.preventDefault();
+
+  // Validasi syarat & ketentuan
+  if (!formData.terms) {
+    alert("Kamu harus menyetujui Syarat & Ketentuan.");
+    return;
+  }
+
+  // ✅ Validasi format email
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
+  if (!isEmailValid) {
+    alert("⚠️ Format email tidak valid.");
+    return;
+  }
+
+  // ✅ Validasi kekuatan password (minimal 8 karakter, huruf besar, kecil, angka, simbol)
+  const isPasswordStrong = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(formData.password);
+  if (!isPasswordStrong) {
+    alert("⚠️ Password harus minimal 8 karakter, dan mengandung huruf besar, kecil, angka, dan simbol.");
+    return;
+  }
+
+  setLoading(true);
+  try {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/users/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
+
+    const data = await res.json();
+    setLoading(false);
+
+    if (res.ok) {
+      setUserEmail(formData.email);
+      setShowVerification(true);
+    } else {
+      alert(data.message || '❌ Gagal mendaftar.');
     }
+  } catch (err) {
+    setLoading(false);
+    console.error(err);
+    alert('Terjadi kesalahan saat mendaftar.');
+  }
+};
 
-    setLoading(true);
-    try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/users/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
 
-      const data = await res.json();
-      setLoading(false);
+ const handleVerify = async () => {
+  setVerifying(true);
+  try {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/users/verify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: formData.email, code: enteredCode })
+    });
 
-      if (res.ok) {
-        setUserEmail(formData.email);
-        setShowVerification(true);
-      } else {
-        alert(data.message || '❌ Gagal mendaftar.');
-      }
-    } catch (err) {
-      setLoading(false);
-      console.error(err);
-      alert('Terjadi kesalahan saat mendaftar.');
+    const data = await res.json();
+    setVerifying(false);
+
+    if (res.ok) {
+      alert('✅ Verifikasi berhasil! Mengarahkan ke halaman login...');
+      navigate('/login'); // 👉 langsung redirect ke login
+    } else {
+      alert(data.message || '❌ Kode verifikasi salah.');
     }
-  };
-
-  const handleVerify = async () => {
-    setVerifying(true);
-    try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/users/verify`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: formData.email, code: enteredCode })
-      });
-
-      const data = await res.json();
-      setVerifying(false);
-
-      if (res.ok) {
-        alert('✅ Verifikasi berhasil! Silakan login.');
-        setShowVerification(false);
-        setFormData({
-          nama: '',
-          email: '',
-          telepon: '',
-          password: '',
-          terms: false,
-        });
-        setEnteredCode('');
-      } else {
-        alert(data.message || '❌ Kode verifikasi salah.');
-      }
-    } catch (err) {
-      setVerifying(false);
-      console.error(err);
-      alert('Terjadi kesalahan saat verifikasi.');
-    }
-  };
+  } catch (err) {
+    setVerifying(false);
+    console.error(err);
+    alert('Terjadi kesalahan saat verifikasi.');
+  }
+};
 
   return (
     <div className="signup-container">
@@ -113,13 +126,37 @@ function SignUpPage() {
 
           <div className="terms">
             <input type="checkbox" id="terms" name="terms" checked={formData.terms} onChange={handleChange} />
-            <label htmlFor="terms">Saya menyetujui Syarat & Ketentuan</label>
+            <label htmlFor="terms">
+            Saya menyetujui{" "}
+          <span className="link-syarat" onClick={() => setShowTerms(true)}>
+          Syarat & Ketentuan
+          </span>
+          </label>
           </div>
 
           <button type="submit" className="signup-button" disabled={loading}>
             {loading ? '⏳ Mendaftarkan...' : 'Daftar'}
           </button>
         </form>
+
+{showTerms && (
+  <div className="popup-syarat">
+    <div className="popup-box">
+      <h3>Syarat & Ketentuan</h3>
+      <ul>
+        <li>🔹 Pengguna wajib menggunakan identitas asli dan dapat dipertanggungjawabkan.</li>
+        <li>🔹 Dilarang menyalahgunakan sistem KAI ROOMS untuk tindakan yang bertentangan dengan hukum dan etika perusahaan.</li>
+        <li>🔹 Informasi yang dimasukkan akan digunakan untuk kepentingan internal dan dijaga kerahasiaannya sesuai kebijakan privasi.</li>
+        <li>🔹 Setiap aktivitas pengguna di dalam sistem dapat diawasi untuk memastikan kepatuhan terhadap ketentuan yang berlaku.</li>
+        <li>🔹 Dengan mendaftar, pengguna menyetujui untuk mematuhi kebijakan dan peraturan yang ditetapkan oleh PT Kereta Api Indonesia (Persero).</li>
+      </ul>
+      <button className="signup-button" onClick={() => setShowTerms(false)}>
+        Tutup
+      </button>
+    </div>
+  </div>
+)}
+
 
         {showVerification && (
           <div className="popup-verifikasi-signup">

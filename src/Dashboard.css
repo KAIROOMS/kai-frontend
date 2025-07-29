@@ -809,7 +809,55 @@ td {
   font-weight: 500;
 }
 
+.popup-sukses {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #aaa;
+  z-index: 999;
+}
 
+.popup-email-form {
+  background: white;
+  padding: 20px;
+  width: 400px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #ccc;
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -30%);
+  z-index: 999;
+}
+
+.scrollable-table {
+  max-height: 240px; /* 💡 Sesuaikan biar cukup 5 baris */
+  overflow-y: auto;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+/* Tambahan biar scroll-nya smooth dan minimalis */
+.scrollable-table::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollable-table::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+/* Sticky header biar th tetap di atas pas scroll */
+.scrollable-table thead th {
+  position: sticky;
+  top: 0;
+  background-color: #f8f9fa;
+  z-index: 1;
+}
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-20px); }
@@ -887,5 +935,86 @@ td {
 
   .meeting-list {
     width: 320px;
+  }
+}
+/* HP kecil: max 480px */
+@media (max-width: 480px) {
+  .popup-form .row,
+  .row.radio {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .popup-form {
+    padding: 15px;
+  }
+
+  .action-btn {
+    width: 100%;
+    font-size: 12px;
+  }
+
+  .sidebar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .sidebar li {
+    font-size: 12px;
+  }
+
+  .greeting h3 {
+    font-size: 14px;
+  }
+}
+
+/* Tablet (768–1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .main-dashboard {
+    padding: 20px 25px;
+  }
+
+  .greeting h3 {
+    font-size: 16px;
+  }
+
+  .action-btn {
+    font-size: 13px;
+  }
+
+  .meeting-list {
+    width: 100%;
+    border-top: 1px solid #ccc;
+    border-left: none;
+  }
+}
+
+/* TV besar (di atas 1920px) */
+@media (min-width: 1920px) {
+  html {
+    font-size: 18px; /* scaling up font */
+  }
+
+  .main-dashboard {
+    padding: 40px 60px;
+  }
+
+  .greeting h3 {
+    font-size: 22px;
+  }
+
+  .sidebar {
+    width: 280px;
+    font-size: 16px;
+  }
+
+  .meeting-list {
+    width: 360px;
+  }
+
+  .action-btn {
+    font-size: 16px;
+    padding: 14px 24px;
   }
 }

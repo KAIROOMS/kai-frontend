@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import "./LoginPage.css";
 import illustration from "./KAI_ROOMS_illustration.png";
 import googleLogo from "./google-logo.png";
-import microsoftLogo from "./microsoft-logo.png";
 import { GoogleLogin } from "@react-oauth/google";
 
 function LoginPage() {
@@ -25,20 +24,39 @@ function LoginPage() {
     console.log("🔵 Response dari login:", data);
 
     if (!res.ok) {
-      setPopupMessage(data.message || "❌ Gagal login. Coba lagi.");
-      setShowPopup(true);
-      return;
-    }
+  console.warn("❗ Login gagal di res.ok:", data.message);
+  setPopupMessage(data.message || "❌ Gagal login. Coba lagi.");
+  setShowPopup(true);
+  return;
+}
 
-    if (!data.user?.verified) {
-      setPopupMessage("⚠️ Akun kamu belum diverifikasi.");
-      setShowPopup(true);
-      return;
-    }
+if (!data.user?.verified) {
+  console.warn("❗ Akun belum diverifikasi.");
+  setPopupMessage("⚠️ Akun kamu belum diverifikasi.");
+  setShowPopup(true);
+  return;
+}
+
+if (!data.user?.isApproved) {
+  console.warn("❗ Akun belum disetujui admin.");
+  setPopupMessage("⚠️ Akun kamu belum disetujui oleh admin.");
+  setShowPopup(true);
+  return;
+}
+
+
+   
 
     // ✅ Simpan user & trigger manual storage event
-    localStorage.setItem("user", JSON.stringify(data.user));
-
+    const finalUser = {
+  ...data.user,
+  _id: data.user.id  // pastikan _id dipakai di seluruh frontend
+};
+console.log("🔥 Lolos semua validasi, menyimpan ke localStorage...");
+console.log("🔐 Final user yang disimpan:", finalUser);
+localStorage.setItem("user", JSON.stringify(finalUser));
+    localStorage.setItem("token", data.token); 
+    localStorage.setItem("email", data.user.email); 
     // ✅ Trigger event agar App.js detect perubahan
     window.dispatchEvent(new Event("storage"));
 
@@ -88,51 +106,23 @@ function LoginPage() {
             <input type="checkbox" />
             Ingat Saya
           </label>
-          <a href="#" className="forgot">Forgot password</a>
+          <span className="forgot" onClick={() => navigate("/forgot-password")} style={{ cursor: "pointer", color: "blue" }}>
+          Forgot password
+          </span>
         </div>
 
         <button className="btn-login" onClick={handleLogin}>Masuk</button>
 
-        <div className="btn-google">
-          <GoogleLogin
-  onSuccess={async (credentialResponse) => {
-    try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/users/google-login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ credential: credentialResponse.credential }),
-      });
+        <button className="btn-google" onClick={() => {
+  window.location.href = "http://localhost:5000/api/auth/google";
+}}>
+  <img src={googleLogo} alt="Google Logo" style={{ width: '20px', marginRight: '10px' }} />
+  Sign in with Google
+</button>
 
-      const data = await res.json();
-      if (res.ok) {
-        localStorage.setItem("user", JSON.stringify(data.user));
-        navigate("/dashboard");
-      } else {
-        setPopupMessage(data.message || "❌ Gagal login via Google.");
-        setShowPopup(true);
-      }
-    } catch (err) {
-      console.error(err);
-      setPopupMessage("❌ Terjadi kesalahan login Google.");
-      setShowPopup(true);
-    }
-  }}
-  onError={() => {
-    console.log("❌ Login Google gagal");
-    setPopupMessage("❌ Login Google gagal.");
-    setShowPopup(true);
-  }}
-  useOneTap={false} // opsional, biar nggak muncul login pop-up otomatis
-  theme="outline"
-  text="signin_with"
-  shape="rectangular"
-/>
-</div>
 
-        <button className="btn-microsoft">
-          <img src={microsoftLogo} alt="Microsoft Logo" style={{ width: '20px', marginRight: '10px' }} />
-          Sign in with Microsoft
-        </button>
+
+        
 
         <p className="register">
           Belum punya akun?{" "}

@@ -193,3 +193,85 @@
   color: white;
 }
 
+/* HP kecil */
+@media (max-width: 480px) {
+  .pengaturan-container {
+    padding: 16px;
+    width: 100%;
+  }
+
+  .pengaturan-box {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .pengaturan-box h2 {
+    font-size: 18px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  .pengaturan-box input {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .avatar-preview {
+    width: 100px;
+    height: 100px;
+  }
+
+  .update-button {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    margin-top: 16px;
+  }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .pengaturan-box {
+    width: 400px;
+    padding: 28px;
+  }
+
+  .pengaturan-box h2 {
+    font-size: 20px;
+  }
+
+  .pengaturan-box input {
+    font-size: 15px;
+  }
+
+  .update-button {
+    font-size: 15px;
+  }
+}
+
+/* Laptop besar / TV */
+@media (min-width: 1440px) {
+  .pengaturan-box {
+    width: 500px;
+    padding: 40px;
+  }
+
+  .pengaturan-box h2 {
+    font-size: 22px;
+  }
+
+  .pengaturan-box input {
+    font-size: 16px;
+    padding: 14px;
+  }
+
+  .update-button {
+    font-size: 16px;
+    padding: 14px 24px;
+  }
+
+  .avatar-preview {
+    width: 150px;
+    height: 150px;
+  }
+}

@@ -85,7 +85,7 @@ useEffect(() => {
 
     // 👇 Ini untuk langsung preview avatar dari backend
     if (storedUser.avatar) {
-      setAvatarPreview(`${process.env.REACT_APP_API_URL}/uploads/${storedUser.avatar}`);
+      setAvatarPreview(storedUser.avatar);
     }
   }
 }, []);
@@ -114,12 +114,36 @@ useEffect(() => {
     fileInputRef.current?.click();
   };
 
-  const handleHapusAvatar = () => {
-    setAvatarPreview(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+  const handleHapusAvatar = async () => {
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+
+  try {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/users/remove-avatar/${storedUser.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert('✅ Avatar berhasil dihapus dari server.');
+      setAvatarPreview(null);
+      setAvatarFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      storedUser.avatar = null;
+      localStorage.setItem("user", JSON.stringify(storedUser));
+    } else {
+      alert(data.message || '❌ Gagal menghapus avatar.');
     }
-  };
+  } catch (err) {
+    console.error(err);
+    alert('❌ Terjadi kesalahan saat menghapus avatar.');
+  }
+};
 
   const handleToggle = (kategori, key) => {
   if (kategori === 'notifikasi') {
@@ -168,18 +192,33 @@ useEffect(() => {
   const storedUser = JSON.parse(localStorage.getItem("user"));
   let updatedUser = null;
 
+  
+  if (!profileData.email.includes("@")) {
+    alert("Email tidak valid.");
+    setIsLoading(false);
+    return;
+  }
+  if (!profileData.telepon.match(/^\+62\d{9,}$/)) {
+    alert("Nomor telepon harus dimulai dengan +62 dan minimal 10 digit.");
+    setIsLoading(false);
+    return;
+  }
   try {
     // 1. Simpan data profil ke backend
-    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/users/update-profile/${storedUser._id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        nama: profileData.namaLengkap,
-        email: profileData.email,
-        telepon: profileData.telepon,
-        departemen: profileData.departemen
-      })
-    });
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/users/update-profile/${storedUser.id}`, {
+    method: 'PUT',
+    headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${localStorage.getItem('token')}`
+    },
+    body: JSON.stringify({
+      nama: profileData.namaLengkap,
+      email: profileData.email,
+      telepon: profileData.telepon,
+      departemen: profileData.departemen
+    })
+});
+
 
     const data = await res.json();
 
@@ -197,8 +236,10 @@ useEffect(() => {
       const formData = new FormData();
       formData.append('avatar', avatarFile);
 
-      const avatarRes = await fetch(`${process.env.REACT_APP_API_URL}/api/users/upload-avatar/${storedUser._id}`, {
+      const avatarRes = await fetch(`${process.env.REACT_APP_API_URL}/api/users/upload-avatar/${storedUser.id}`, {
         method: 'POST',
+        headers: {'Authorization': `Bearer ${localStorage.getItem('token')}` // ✅ Kirim token
+        },
         body: formData
       });
 

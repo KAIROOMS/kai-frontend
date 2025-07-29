@@ -57,9 +57,15 @@ body, html {
 }
 
 .timerText {
-  font-size: 2.2rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 36px;
   font-weight: bold;
+  color: white;
 }
+
 
 .meetingInfo-hybrid {
   text-align: center;
@@ -228,7 +234,134 @@ body, html {
 }
 
 
+.circular-progress {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+}
+
+.progress-ring-circle-bg {
+  fill: transparent;
+  stroke: rgba(255, 255, 255, 0.2);
+  stroke-width: 12;
+}
+
+.progress-ring-circle {
+  fill: transparent;
+  stroke: #00ffc8;
+  stroke-width: 12;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease-in-out;
+}
+
+.timerText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 36px;
+  font-weight: bold;
+  color: white;
+}
+
+.meeting-status-label {
+  margin-top: 10px;
+  margin-bottom: 25px !important;
+  text-align: center;
+  color: white;
+  font-size: 16px;
+}
+
+
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.4; }
+}
+
+/* HP kecil */
+@media (max-width: 480px) {
+  .hybrid-status-container {
+    padding: 16px;
+    text-align: center;
+  }
+
+  .status-text {
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  .time-display, .circle-timer {
+    width: 120px;
+    height: 120px;
+    font-size: 16px;
+  }
+
+  .back-button {
+    font-size: 12px;
+    padding: 10px 14px;
+  }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .hybrid-status-container {
+    padding: 24px;
+  }
+
+  .status-text {
+    font-size: 16px;
+  }
+
+  .time-display, .circle-timer {
+    width: 150px;
+    height: 150px;
+    font-size: 18px;
+  }
+
+  .back-button {
+    font-size: 14px;
+    padding: 12px 18px;
+  }
+}
+
+/* ✅ Tambahkan ini: Laptop kecil - besar */
+@media (min-width: 1025px) and (max-width: 1439px) {
+  .timerText {
+    font-size: 28px;
+  }
+
+  .meetingTitle-hybrid {
+    font-size: 1.6rem;
+  }
+
+  .participantGroup {
+    padding: 1rem;
+  }
+}
+
+/* Laptop besar / TV */
+@media (min-width: 1440px) {
+  .hybrid-status-container {
+    padding: 40px 60px;
+  }
+
+  .status-text {
+    font-size: 20px;
+  }
+
+  .time-display, .circle-timer {
+    width: 200px;
+    height: 200px;
+    font-size: 20px;
+  }
+
+  .back-button {
+    font-size: 16px;
+    padding: 14px 24px;
+  }
 }

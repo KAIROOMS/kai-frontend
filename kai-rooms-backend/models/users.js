@@ -9,7 +9,13 @@ const userSchema = new mongoose.Schema({
   verified: { type: Boolean, default: false },
   avatar: String,
   departemen: String,
-  isGoogleUser: { type: Boolean, default: false } 
+  isGoogleUser: { type: Boolean, default: false },
+  resetPasswordToken: { type: String },
+  resetPasswordExpires: { type: Date },
+  isApproved: {  // ✅ field baru
+    type: Boolean,
+    default: false,
+  },
 });
 
 module.exports = mongoose.model('User', userSchema);

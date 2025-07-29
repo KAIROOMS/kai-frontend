@@ -285,6 +285,29 @@ body {
   }
 }
 
+/* ================= LAPTOP (1025px–1439px) ================= */
+@media (min-width: 1025px) and (max-width: 1439px) {
+  .notifikasi-container {
+    padding: 28px;
+    margin: 50px auto;
+  }
+
+  .notif-title {
+    font-size: 1.05rem;
+  }
+
+  .notif-time {
+    font-size: 0.85rem;
+  }
+
+  .btn-clear,
+  .btn-reset {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+}
+
+
 /* ================= LAYAR BESAR / TV (≥1440px) ================= */
 @media (min-width: 1440px) {
   .notifikasi-container {

@@ -125,8 +125,7 @@
   background-color: #4a50d0;
 }
 
-.btn-google,
-.btn-microsoft {
+.btn-google {
   width: 100%;
   padding: 12px;
   font-size: 14px;
@@ -143,10 +142,15 @@
   transition: background-color 0.3s;
 }
 
-.btn-google:hover,
-.btn-microsoft:hover {
+.btn-google:hover{
   background-color: #f4f4f4;
 }
+
+.logo-icon {
+  width: 5px;
+  height: 5px;
+}
+
 
 /* Register link di tengah bawah form */
 .register {
@@ -231,8 +235,7 @@
   }
 
   .btn-login,
-  .btn-google,
-  .btn-microsoft {
+  .btn-google {
     font-size: 14px;
     padding: 10px;
   }

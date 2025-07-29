@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import './Dashboard.css';
 import { useNavigate } from 'react-router-dom';
 import kaiLogo from './KAI_ROOMS_logo.png';
+import axios from 'axios';
+
 
 
 
@@ -55,6 +57,12 @@ function Dashboard({ setIsAuthenticated }) {
   const [realtimeStatus, setRealtimeStatus] = useState([]);
   const [upcomingMeetings, setUpcomingMeetings] = useState([]);
   const [reminderMeeting, setReminderMeeting] = useState(null);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [showEmailInputPopup, setShowEmailInputPopup] = useState(false);
+  const [emailList, setEmailList] = useState(""); 
+  const [linkConfirmed, setLinkConfirmed] = useState(false);
+
+
 
 
   
@@ -123,54 +131,62 @@ useEffect(() => {
 }, [remindedMeetings]);
 
 useEffect(() => {
-  fetch(`${process.env.REACT_APP_API_URL}/api/booking`)
-    .then(res => res.json())
-    .then(data => {
-      const now = new Date();
-      const todayString = now.toISOString().split("T")[0];
+  const fetchStatus = () => {
+    fetch(`${process.env.REACT_APP_API_URL}/api/booking`)
+      .then(res => res.json())
+      .then(data => {
+        const now = new Date();
+        const todayString = now.toISOString().split("T")[0];
 
-      const results = data
-        .filter(item => item.tanggal === todayString)
-        .map(item => {
-          const start = new Date(`${item.tanggal}T${item.waktuMulai}`);
-          const end = new Date(`${item.tanggal}T${item.waktuSelesai}`);
+        const results = data
+          .filter(item => item.tanggal === todayString)
+          .map(item => {
+            const start = new Date(`${item.tanggal}T${item.waktuMulai}`);
+            const end = new Date(`${item.tanggal}T${item.waktuSelesai}`);
 
-          let status = "available";
+            let status = "available";
 
-          if (now >= start && now <= end) {
-            status = "in_use";
-          } else if (start > now && (start - now) / 60000 <= 60) {
-            status = "reserved";
-          } else if (now > end && (now - end) / 60000 <= 5) {
-            status = "done";
-          } else {
-            return null;
-          }
+            if (now >= start && now <= end) {
+              status = "in_use";
+            } else if (start > now && (start - now) / 60000 <= 60) {
+              status = "reserved";
+            } else if (now > end && (now - end) / 60000 <= 5) {
+              status = "done";
+            } else {
+              return null;
+            }
 
-          return {
-            title: item.namaRapat,
-            lokasi: item.lokasi,
-            ruangan: item.ruangan,
-            unit: item.penyelenggara,
-            status,
-            endTime: item.waktuSelesai,
-            startTime: item.waktuMulai,
-            tanggal: item.tanggal,
-            kapasitas: item.kapasitas,
-            catatan: item.catatan,
-            linkMeet: item.linkMeet,
-            jenisRapat: item.jenisRapat   
-          };
-        })
-        .filter(item => item !== null);
+            return {
+              title: item.namaRapat,
+              lokasi: item.lokasi,
+              ruangan: item.ruangan,
+              unit: item.penyelenggara,
+              status,
+              endTime: item.waktuSelesai,
+              startTime: item.waktuMulai,
+              tanggal: item.tanggal,
+              kapasitas: item.kapasitas,
+              catatan: item.catatan,
+              linkMeet: item.linkMeet,
+              jenisRapat: item.jenisRapat   
+            };
+          })
+          .filter(item => item !== null);
 
-      setRealtimeStatus(results);
-    })
-    .catch(err => {
-      console.error("Gagal ambil status realtime:", err);
-      setRealtimeStatus([]);
-    });
+        setRealtimeStatus(results);
+      })
+      .catch(err => {
+        console.error("Gagal ambil status realtime:", err);
+        setRealtimeStatus([]);
+      });
+  };
+
+  fetchStatus(); // pertama kali ambil
+  const interval = setInterval(fetchStatus, 10000); // update tiap 10 detik
+
+  return () => clearInterval(interval);
 }, []);
+
 
 useEffect(() => {
   fetch(`${process.env.REACT_APP_API_URL}/api/booking`)
@@ -273,10 +289,11 @@ const handleSubmit = (e) => {
 
 
 useEffect(() => {
-  if (formData.jenisRapat === 'Online' && showBookingOptionPopup) {
+  if (formData.jenisRapat === 'Online' && showBookingOptionPopup && !linkConfirmed) {
     setShowLinkPopup(true);
   }
-}, [formData.jenisRapat, showBookingOptionPopup]);
+}, [formData.jenisRapat, showBookingOptionPopup, linkConfirmed]);
+
 
 const navigate = useNavigate();
 
@@ -323,15 +340,18 @@ const handleConfirmLink = () => {
     return;
   }
 
-  // ✅ Simpan ke formData
+  // Simpan link meeting ke formData
   setFormData(prev => ({ ...prev, linkMeet: meetingLink }));
+  setLinkConfirmed(true); // ✅ Tambahkan ini setelah setFormData
 
-  // ✅ Tutup popup masukan link
+
+  // Tutup popup input link
   setShowLinkPopup(false);
 
-  // ✅ Tampilkan popup pilihan Instant / Later
-  setShowBookingOptionPopup(true);
+  // ✅ Tampilkan popup: "Booking berhasil! Kirim email?"
+  setShowSuccessPopup(true); // ini trigger munculnya popup konfirmasi email
 };
+
 
 
 
@@ -352,6 +372,50 @@ const handleSearch = () => {
       setSearchResults([]);
     });
 };
+
+const handleKirimEmail = () => {
+  setShowSuccessPopup(false);
+  // Munculkan popup input email nanti di langkah selanjutnya
+  setShowEmailInputPopup(true);
+};
+
+const handleLewati = () => {
+  setShowSuccessPopup(false);
+  setShowBookingOptionPopup(true); // langsung ke pilihan instant/later
+};
+
+const handleSubmitEmail = async () => {
+  if (!emailList.trim()) {
+    alert("Email peserta tidak boleh kosong.");
+    return;
+  }
+
+  const emailArray = emailList
+    .split(",")
+    .map(email => email.trim())
+    .filter(email => email !== "");
+
+  try {
+    await axios.post("http://localhost:5000/api/booking/send-invite", {
+      emails: emailArray,
+      meetingLink: formData.linkMeet,
+      meetingName: formData.namaRapat,
+      date: formData.tanggal,
+      time: `${formData.waktuMulai} - ${formData.waktuSelesai}`,
+      catatan: formData.catatan,
+    });
+
+    alert("Undangan berhasil dikirim!");
+    setShowEmailInputPopup(false);
+
+    // Setelah kirim email, munculkan popup Create Now / Create Later
+    setShowBookingOptionPopup(true);
+  } catch (error) {
+    alert("Gagal mengirim undangan.");
+    console.error(error);
+  }
+};
+
 
 // ⬇️ Bagian return
 return (
@@ -444,6 +508,7 @@ return (
 
 <div className="room-status-wrapper">
   <div className="room-status">
+   <div className="scrollable-table">
     <table>
       <thead>
         <tr>
@@ -513,6 +578,7 @@ return (
         })}
       </tbody>
     </table>
+    </div>
 
     <button className="book-btn" onClick={() => setShowPopup(true)}>
       Book a Room
@@ -760,7 +826,8 @@ return (
     )}
   </div>
 
-  {/* ✅ POPUP LINK INI HARUS DI LUAR MAP() */}
+   </aside>
+    {/* ✅ POPUP LINK INI HARUS DI LUAR MAP() */}
   {showLinkPopup && (
     <div className="popup-overlay">
       <div className="popup-link-form">
@@ -779,8 +846,38 @@ return (
       </div>
     </div>
   )}
-   </aside>
-   
+
+{showSuccessPopup && (
+  <div className="popup-overlay">
+    <div className="popup-email-confirmation">
+      <h2>Booking berhasil!</h2>
+      <p>Apakah Anda ingin mengirim undangan via email ke peserta rapat?</p>
+      <button onClick={handleKirimEmail}>Kirim Email</button>
+      <button onClick={handleLewati}>Lewati</button>
+    </div>
+  </div>
+)}
+
+{showEmailInputPopup && (
+  <div className="popup-overlay">
+    <div className="popup-email-form">
+      <h2>Kirim Undangan Email</h2>
+      <p>Masukkan alamat email peserta (pisahkan dengan koma):</p>
+      <textarea
+        value={emailList}
+        onChange={(e) => setEmailList(e.target.value)}
+        placeholder="contoh: user1@kai.id, user2@gmail.com"
+        rows={4}
+        style={{ width: "100%", padding: "10px" }}
+      ></textarea>
+      <div style={{ marginTop: "10px" }}>
+        <button onClick={handleSubmitEmail}>Kirim</button>
+        <button onClick={() => setShowEmailInputPopup(false)}>Batal</button>
+      </div>
+    </div>
+  </div>
+)}
+
  {showSearchPopup && (
   <div className="popup-overlay">
     <div className="popup-search">

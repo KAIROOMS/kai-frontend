@@ -8,6 +8,8 @@ export default function RiwayatRapat() {
   const [sortAsc, setSortAsc] = useState(true);
   const [doneMeetings, setDoneMeetings] = useState([]);
   const navigate = useNavigate();
+  const [selectedMeeting, setSelectedMeeting] = useState(null);
+  const [showDetailPopup, setShowDetailPopup] = useState(false);
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/api/booking`)
@@ -86,6 +88,15 @@ useEffect(() => {
     const year = date.getFullYear();
     return `${day} ${month} ${year}\n${timeRange}`;
   };
+const openDetailPopup = (meeting) => {
+  setSelectedMeeting(meeting);
+  setShowDetailPopup(true);
+};
+
+const closeDetailPopup = () => {
+  setSelectedMeeting(null);
+  setShowDetailPopup(false);
+};
 
   return (
     <div className="app-container">
@@ -101,6 +112,22 @@ useEffect(() => {
           <div className="page-title">
             <h1>RIWAYAT RAPAT SAYA</h1>
           </div>
+{showDetailPopup && selectedMeeting && (
+  <div className="popup-overlay-riwayat">
+    <div className="popup-content-riwayat">
+      <h3>Detail Rapat</h3>
+      <p><strong>Nama Rapat:</strong> {selectedMeeting.namaRapat}</p>
+      <p><strong>Penyelenggara:</strong> {selectedMeeting.penyelenggara}</p>
+      <p><strong>Tanggal:</strong> {selectedMeeting.tanggal}</p>
+      <p><strong>Waktu:</strong> {selectedMeeting.waktuMulai} - {selectedMeeting.waktuSelesai}</p>
+      <p><strong>Ruangan:</strong> {selectedMeeting.ruangan}</p>
+      <p><strong>Kapasitas:</strong> {selectedMeeting.kapasitas}</p>
+      <p><strong>Lantai:</strong> {selectedMeeting.lokasi || 'Tidak disebutkan'}</p>
+      <p><strong>Jenis Rapat:</strong> {selectedMeeting.jenisRapat || 'Tidak disebutkan'}</p>
+      <button className="close-popup-button-riwayat" onClick={closeDetailPopup}>Tutup</button>
+    </div>
+  </div>
+)}
 
           <div className="search-section">
             <div className="search-input-container">
@@ -153,11 +180,14 @@ useEffect(() => {
                   <div className="td status">
                     <div className="status-badge-riwayat">
                       <span className="status-icon">✓</span> 
-                      <span className="status-text">Done</span>
+                      <span className="status-text-riwayat">Done</span>
                     </div>
                   </div>
-                  <div className="td actions">
-                    <button className="detail-button">Detail</button>
+                  <div className="td actions riwayat">
+                    <button className="detail-button-riwayat" onClick={() => openDetailPopup(meeting)}>
+                      Detail
+                      </button>
+
                   </div>
                 </div>
               ))}

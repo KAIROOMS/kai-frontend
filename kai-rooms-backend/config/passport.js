@@ -70,9 +70,13 @@ passport.use(
   )
 );
 
-passport.serializeUser((user, done) => {
-  console.log("🔄 Serialize user:", user.id);
-  done(null, user.id);
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id); // ✅ Ambil lengkap dari DB
+    done(null, user);
+  } catch (error) {
+    done(error, null);
+  }
 });
 
 passport.deserializeUser(async (id, done) => {

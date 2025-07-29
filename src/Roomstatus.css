@@ -280,3 +280,180 @@
     padding-top: 60px;
   }
 }
+
+@media (max-width: 480px) {
+  .room-status-container {
+    flex-direction: column;
+  }
+
+  .status-sidebar {
+    padding: 20px;
+    height: 75vh;
+  }
+
+  .kai-rooms-header {
+    top: 20px;
+    left: 20px;
+    gap: 6px;
+  }
+
+  .kai-text {
+    font-size: 14px;
+  }
+
+  .status-badge-roomstatus {
+    top: 20px;
+    right: 20px;
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .datetime-display {
+    top: 60px;
+    right: 20px;
+    font-size: 12px;
+  }
+
+  .room-info {
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .unavailable-text {
+    font-size: 20px;
+  }
+
+  .room-busy-text {
+    font-size: 14px;
+  }
+
+  .timer-text {
+    font-size: 24px;
+  }
+
+  .room-name,
+  .capacity,
+  .meeting-name,
+  .booking-time,
+  .organizer {
+    font-size: 14px;
+  }
+
+  .upcoming-sidebar-room {
+    width: 100%;
+    height: 25vh;
+    padding: 20px;
+  }
+
+  .upcoming-header-room h3 {
+    font-size: 16px;
+  }
+
+  .meeting-title {
+    font-size: 14px;
+  }
+
+  .meeting-unit {
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .kai-text {
+    font-size: 26px;
+  }
+
+  .status-badge-roomstatus,
+  .datetime-display {
+    font-size: 18px;
+  }
+
+  .unavailable-text {
+    font-size: 40px;
+  }
+
+  .room-busy-text {
+    font-size: 24px;
+  }
+
+  .room-name {
+    font-size: 30px;
+  }
+
+  .capacity,
+  .meeting-name,
+  .organizer {
+    font-size: 20px;
+  }
+
+  .booking-time {
+    font-size: 22px;
+    padding: 12px 24px;
+  }
+
+  .timer-text {
+    font-size: 52px;
+  }
+
+  .upcoming-header-room h3 {
+    font-size: 24px;
+  }
+
+  .meeting-title {
+    font-size: 20px;
+  }
+
+  .meeting-unit {
+    font-size: 16px;
+  }
+}
+
+/* ================= LAPTOP KECIL - BESAR (1025px–1439px) ================= */
+@media (min-width: 1025px) and (max-width: 1439px) {
+  .timer-text {
+    font-size: 36px;
+  }
+
+  .room-name {
+    font-size: 22px;
+  }
+
+  .capacity,
+  .meeting-name,
+  .organizer {
+    font-size: 16px;
+  }
+
+  .booking-time {
+    font-size: 18px;
+  }
+
+  .unavailable-text {
+    font-size: 28px;
+  }
+
+  .room-busy-text {
+    font-size: 16px;
+  }
+
+  .status-badge-roomstatus,
+  .datetime-display {
+    font-size: 14px;
+  }
+
+  .kai-text {
+    font-size: 18px;
+  }
+
+  .meeting-title {
+    font-size: 16px;
+  }
+
+  .meeting-unit {
+    font-size: 13px;
+  }
+
+  .upcoming-header-room h3 {
+    font-size: 18px;
+  }
+}

@@ -170,6 +170,7 @@
   padding: 15px;
   display: flex;
   align-items: center;
+   height: 100%;
 }
 
 .judul-rapat {
@@ -191,10 +192,14 @@
   gap: 5px;
   background-color: #CBCDF9;
   color: #2F1F8A;
-  padding: 5px 12px;
+  padding: 3px 8px;
   border-radius: 20px;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 12px;
+}
+
+.status-text-riwayat {
+  font-size: 15px; 
 }
 
 .status-icon {
@@ -202,7 +207,7 @@
   font-weight: bold;
 }
 
-.detail-button {
+.detail-button-riwayat {
   background-color: #2F1F8A;
   color: white;
   font-size: 14px;
@@ -210,6 +215,11 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
+}
+.td.actions.riwayat {
+  justify-content: center;
+  align-items: center;
+  display: flex;
 }
 
 .empty-state {
@@ -235,6 +245,41 @@
   border-radius: 6px;
   cursor: pointer;
   font-size: 15px;
+}
+/* Modal Overlay */
+.popup-overlay-riwayat {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);  /* gelap semi transparan */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* pastikan lebih tinggi dari konten lain */
+}
+
+/* Konten di tengah layar */
+.popup-content-riwayat {
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  z-index: 10000;
+}
+
+/* Tombol tutup */
+.close-popup-button-riwayat {
+  background-color: #2F1F8A;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  margin-top: 15px;
+  cursor: pointer;
 }
 
 /* Responsive styles */
@@ -302,5 +347,76 @@
 
   .page-title h1 {
     font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title h1 {
+    font-size: 18px;
+    text-align: center;
+  }
+
+  .search-section {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .meeting-table {
+    overflow-x: auto;
+  }
+
+  .detail-button {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .table-header,
+  .table-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .th.status,
+  .td.status,
+  .th.actions,
+  .td.actions {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .search-section {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .detail-button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  .page-title h1 {
+    font-size: 22px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .content-area {
+    max-width: 1600px;
+    padding: 0 80px;
+  }
+
+  .page-title h1 {
+    font-size: 32px;
+  }
+
+  .detail-button {
+    font-size: 16px;
+    padding: 12px 20px;
+  }
+
+  .table-row,
+  .table-header {
+    font-size: 18px;
   }
 }

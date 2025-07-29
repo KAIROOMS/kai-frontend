@@ -14,11 +14,18 @@ router.get(
   "/google/callback",
   passport.authenticate("google", {
     failureRedirect: "http://localhost:3000/auth/error",
-    session: false, // ✅ tambahkan ini jika kamu tidak menggunakan session
+    session: false,
   }),
-  (req, res) => {
+  async (req, res) => {
     try {
       console.log("🔄 Google callback berhasil, user:", req.user.email);
+
+      // 💥 Cek apakah akun sudah disetujui oleh admin, KECUALI kalau dia admin
+      const adminEmails = ["sbilla241@gmail.com", "kairoomsmeet@gmail.com"];
+      if (!req.user.isApproved && !adminEmails.includes(req.user.email)) {
+        console.warn("❌ Akun belum disetujui admin:", req.user.email);
+        return res.redirect("http://localhost:3000/auth/error?message=Akun%20belum%20disetujui%20oleh%20admin.");
+      }
 
       // ✅ Generate JWT token
       const token = generateToken(req.user._id);
@@ -35,7 +42,6 @@ router.get(
         departemen: req.user.departemen,
       };
 
-      // ✅ Redirect ke frontend (auth/success) dengan token dan user info
       const redirectUrl = `http://localhost:3000/auth/success?token=${token}&user=${encodeURIComponent(
         JSON.stringify(userInfo)
       )}`;
@@ -48,6 +54,7 @@ router.get(
     }
   }
 );
+
 
 // Rute untuk logout
 router.post("/logout", (req, res) => {

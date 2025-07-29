@@ -3,6 +3,9 @@ const router = express.Router();
 const Booking = require('../models/booking');
 const nodemailer = require('nodemailer');
 
+
+require('dotenv').config();
+
 // 🔥 Fungsi bantu untuk ubah jam ke menit
 const toMinutes = (timeStr) => {
   const [hour, minute] = timeStr.split(':').map(Number);
@@ -109,47 +112,49 @@ router.get('/', async (req, res) => {
 });
 // POST /api/send-invite
 router.post('/send-invite', async (req, res) => {
-  const {
-    namaRapat,
-    tanggal,
-    waktuMulai,
-    waktuSelesai,
-    linkMeet,
-    emailUndangan
-  } = req.body;
+  const { emails, meetingLink, meetingName, date, time, catatan } = req.body;
 
-  const recipients = emailUndangan.split(',').map(email => email.trim());
+  if (!emails || !meetingLink || !meetingName || !date || !time) {
+    return res.status(400).json({ message: 'Data tidak lengkap' });
+  }
+  console.log("📬 Email user:", process.env.EMAIL_USER);
+  console.log("📬 Email pass exists?", !!process.env.EMAIL_PASS);
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: process.env.EMAIL_SENDER,
-      pass: process.env.EMAIL_PASSWORD
+      user: process.env.EMAIL_USER,      
+      pass: process.env.EMAIL_PASS       
     }
   });
 
   const mailOptions = {
-    from: `"KAI ROOMS" <${process.env.EMAIL_SENDER}>`,
-    to: recipients,
-    subject: `Undangan Rapat: ${namaRapat}`,
+    from: `"KAI ROOMS" <${process.env.EMAIL_USER}>`,
+    to: emails,
+    subject: `Undangan Rapat: ${meetingName}`,
     html: `
-      <h3>Undangan Rapat</h3>
-      <p><strong>Judul:</strong> ${namaRapat}</p>
-      <p><strong>Tanggal:</strong> ${tanggal}</p>
-      <p><strong>Waktu:</strong> ${waktuMulai} - ${waktuSelesai}</p>
-      <p><strong>Link Google Meet:</strong> <a href="${linkMeet}">${linkMeet}</a></p>
+      <p>Yth. Peserta Rapat,</p>
+      <p>Anda diundang untuk menghadiri rapat berikut:</p>
+      <ul>
+        <li><strong>Judul:</strong> ${meetingName}</li>
+        <li><strong>Tanggal:</strong> ${date}</li>
+        <li><strong>Waktu:</strong> ${time}</li>
+        <li><strong>Link Rapat:</strong> <a href="${meetingLink}">${meetingLink}</a></li>
+        ${catatan ? `<li><strong>Catatan:</strong> ${catatan}</li>` : ''}
+      </ul>
+      <p>Mohon kehadirannya tepat waktu. Terima kasih!</p>
     `
   };
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log("✅ Email undangan berhasil dikirim ke:", recipients);
-    res.status(200).json({ message: "Email terkirim!" });
+    res.status(200).json({ message: 'Email berhasil dikirim.' });
   } catch (error) {
-    console.error("❌ Gagal kirim email:", error);
-    res.status(500).json({ message: "Gagal kirim email." });
+    console.error('Gagal kirim email:', error);
+    res.status(500).json({ message: 'Gagal mengirim email.' });
   }
 });
+
 
 
 
