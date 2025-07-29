@@ -9,7 +9,7 @@ function Notifikasi() {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/booking');
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/booking`);
         const data = await response.json();
 
         const now = new Date();

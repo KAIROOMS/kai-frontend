@@ -396,7 +396,7 @@ const handleSubmitEmail = async () => {
     .filter(email => email !== "");
 
   try {
-    await axios.post("http://localhost:5000/api/booking/send-invite", {
+    await axios.post(`${process.env.REACT_APP_API_URL}/api/booking/send-invite`, {
       emails: emailArray,
       meetingLink: formData.linkMeet,
       meetingName: formData.namaRapat,

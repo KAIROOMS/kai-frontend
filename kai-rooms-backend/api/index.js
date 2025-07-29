@@ -3,12 +3,12 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const session = require("express-session");
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const passport = require("../config/passport");
 
 const path = require("path");
 require("dotenv").config();
-
 
 
 
@@ -22,12 +22,14 @@ console.log("✅ Loaded .env file from:", path.join(__dirname, "..", ".env"));
 console.log("GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID);
 
 
+//update
+
 
 const app = express();
 
 
 app.use(cors({
-  origin: "https://kai-rooms.vercel.app" || "http://localhost:3000",
+  origin: ["https://kai-rooms.vercel.app", "http://localhost:3000"],
   credentials: true,
 }));
 app.use(bodyParser.json());
@@ -37,10 +39,9 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: {
-    secure: false,
-    maxAge: 24 * 60 * 60 * 1000,
-  },
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI,
+  })
 }));
 
 
