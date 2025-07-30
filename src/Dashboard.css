@@ -399,19 +399,14 @@ td {
   transform: translateY(-1px);
 }
 
-.popup-form .email-btn {
-  background: #4e5bdc;
-  color: white;
-}
+
 
 .popup-form .buat-btn {
   background: linear-gradient(135deg, #FF6B35 0%, #FF8A50 100%);
   color: white;
 }
 
-.popup-form .email-btn:hover {
-  background: #3a49b6;
-}
+
 
 .popup-form .buat-btn:hover {
   background: linear-gradient(135deg, #e55a2b 0%, #e57040 100%);

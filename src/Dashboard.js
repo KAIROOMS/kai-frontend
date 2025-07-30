@@ -689,7 +689,6 @@ return (
                 <textarea name="catatan" value={formData.catatan} onChange={handleChange}></textarea>
 
                 <div className="row btns">
-                  <button type="button" className="email-btn">📩 Sent Via Email</button>
                   <button type="button" onClick={() => setShowPopup(false)}>Batal</button>
                   <button type="submit" className="buat-btn">Buat</button>
                 </div>
