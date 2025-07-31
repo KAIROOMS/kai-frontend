@@ -658,6 +658,7 @@ return (
                   <div className="form-group">
                     <label>Lokasi</label>
                     <select name="lokasi" value={formData.lokasi} onChange={handleChange}>
+                      <option value="">Pilih lokasi</option>
                       <option value="1">Lantai 1</option>
                       <option value="2">Lantai 2</option>
                       </select>
@@ -667,6 +668,7 @@ return (
                 <div className="form-group">
                 <label>Ruangan</label>
                 <select name="ruangan" value={formData.ruangan} onChange={handleChange}>
+                  <option value="">Pilih ruangan</option>
                   <option>Batavia</option>
                   <option>Jayakarta</option>
                   <option>Nusantara</option>
@@ -689,6 +691,7 @@ return (
                 <textarea name="catatan" value={formData.catatan} onChange={handleChange}></textarea>
 
                 <div className="row btns">
+
                   <button type="button" onClick={() => setShowPopup(false)}>Batal</button>
                   <button type="submit" className="buat-btn">Buat</button>
                 </div>

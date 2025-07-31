@@ -9,7 +9,7 @@ const Aktivitas = () => {
   const [selectedDate, setSelectedDate] = useState(12);
   const [scheduledMeetings, setScheduledMeetings] = useState([]);
   const [eventDates, setEventDates] = useState([]); 
-  const [selectedEvents, setSelectedEvents] = useState([]); // ✅ tambahan
+  const [selectedEvents, setSelectedEvents] = useState([]); 
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/api/booking`)
