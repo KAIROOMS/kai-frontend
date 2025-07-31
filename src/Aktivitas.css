@@ -3,7 +3,12 @@
   min-height: 100vh;
   padding: 20px;
   font-family: 'Arial', sans-serif;
+
+  /* ⬇ Tambahkan baris ini */
+  overflow-y: auto;
+  max-height: 100vh;
 }
+
 
 .aktivitas-header {
   display: flex;
